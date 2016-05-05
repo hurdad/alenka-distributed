@@ -6,11 +6,19 @@
 #include "common.h"
 #include <map>
 
+#include "alenka.h"
+
 using namespace std;
 
 class Worker : public Watcher{
 public:
-    Worker(ZooKeeper *zk) : Watcher(zk) {}
+    Worker(ZooKeeper *zk) : Watcher(zk) {
+    	alenka::init(NULL);
+    }
+
+    ~Worker(){
+    	alenka::close();
+    }
 
     bool createWorkspace();
     bool createWorker();

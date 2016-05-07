@@ -12,6 +12,8 @@ public:
     Watcher(ZooKeeper *zk):is_connected_(false), is_expired_(true), zk(zk) {
     }
 
+    virtual ~Watcher(){}
+
     bool isConnected() {
         return is_connected_;
     }

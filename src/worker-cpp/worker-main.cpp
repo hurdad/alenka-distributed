@@ -1,19 +1,52 @@
 #include <string>
+#include <boost/program_options.hpp>
 #include "worker.h"
-#include "common.h"
+#include "config.h"
 
 using namespace std;
+using namespace boost::program_options;
 
 int main(int argc, char **argv) {
-    if (process(argc, argv)) {
-        return 1;
-    }
 
-    log_init(CLOG_LEVEL_INFO, "log-worker");
+	string config;
+	options_description desc("Options");
+	desc.add_options()("help", "Options related to the program.")("config,c",
+			value<string>(&config)->default_value("config/sample.cfg"), "Configuration File");
 
-    string host = "192.168.85.132:2181,192.168.85.132:2182,192.168.85.132:2183";
+	variables_map vm;
+	try {
+		store(parse_command_line(argc, argv, desc), vm);
+		notify(vm);
+	} catch (exception &e) {
+		cout << e.what() << endl;
+		return EXIT_FAILURE;
+	}
 
-    ZooKeeper zk(host, 10000);
+	//print help
+	if (vm.count("help")) {
+		cout << desc << endl;
+		return EXIT_SUCCESS;
+	}
+
+	//init config
+	initZookeeperConfig();
+
+	//parse config
+	parseWorkerConfig(config.c_str());
+
+	//data dictionary config
+	alenka::data_dict_redis_simple_host = _dd.redis_simple_host;
+	alenka::data_dict_redis_simple_port = _dd.redis_simple_port;
+	alenka::data_dict_redis_simple_pool = _dd.redis_simple_pool;
+
+	//hdfs config
+	alenka::file_system_hdfs_host = _fs.hdfs_host.c_str();
+	alenka::file_system_hdfs_port = _fs.hdfs_port;
+	alenka::file_system_hdfs_base_path = _fs.hdfs_base_path.c_str();
+
+	log_init((CLogLevel)log_level, "worker.log");
+
+    ZooKeeper zk(_zk.hosts, _zk.timeout);
 
     Worker w(&zk);
     w.startWatchThread();

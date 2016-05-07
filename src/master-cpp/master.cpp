@@ -3,7 +3,7 @@
 
 bool Master::createMaster() {
     string fullpath;
-    int code = zk->create(MASTERPATH + "/master-", "", ZOO_OPEN_ACL_UNSAFE,
+    int code = zk->create(getMasterPath() + "/master-", "", ZOO_OPEN_ACL_UNSAFE,
             ZOO_SEQUENCE | ZOO_EPHEMERAL, &fullpath, true);
 
     NOTOK_RETURN(code);
@@ -16,7 +16,7 @@ bool Master::createMaster() {
 
 bool Master::checkMaster() {
     vector<string> children;
-    int code = zk->getChildren(MASTERPATH, false, &children);
+    int code = zk->getChildren(getMasterPath(), false, &children);
 
     NOTOK_RETURN(code);
 
@@ -34,7 +34,7 @@ bool Master::checkMaster() {
             LOG_ERROR("not found master:%s", m_master_node.c_str());
         }
 
-        m_watch_node = MASTERPATH+"/"+*(--it);
+        m_watch_node = getMasterPath()+"/"+*(--it);
         LOG_INFO("watch node:%s", m_watch_node.c_str());
         code = zk->exists(m_watch_node, true, NULL);
         NOTOK_RETURN(code);
@@ -62,12 +62,12 @@ void Master::runAsMaster() {
 
 bool Master::initWorkers() {
     vector<string> workers;
-    int code = zk->getChildren(WORKERPATH, false, &workers);
+    int code = zk->getChildren(getWorkerPath(), false, &workers);
     NOTOK_RETURN(code);
 
     for (int i = 0; i < workers.size(); ++i) {
         vector<string> tasks;
-        int code = zk->getChildren(ASSIGNPATH+"/"+workers[i], false, &tasks);
+        int code = zk->getChildren(getAssignPath()+"/"+workers[i], false, &tasks);
         NOTOK_RETURN(code);
 
         m_worker[workers[i]] = tasks.size();
@@ -99,30 +99,30 @@ bool Master::initTasks() {
 }
 
 bool Master::taskWatch() {
-    int code = zk->getChildren(TASKPATH, true, NULL);
+    int code = zk->getChildren(getTaskPath(), true, NULL);
     NOTOK_RETURN(code);
 
     return true;
 }
 
 bool Master::workerWatch() {
-    int code = zk->getChildren(WORKERPATH, true, NULL);
+    int code = zk->getChildren(getWorkerPath(), true, NULL);
     NOTOK_RETURN(code);
 
     return true;
 }
 
 void Master::childChange(const string &path) {
-    if (path == WORKERPATH) {
+    if (path == getWorkerPath()) {
         updateWorkers();
-    } else if (path == TASKPATH) {
+    } else if (path == getTaskPath()) {
         updateTasks();
     }
 }
 
 bool Master::updateWorkers() {
     vector<string> children;
-    int code = zk->getChildren(WORKERPATH, true, &children);
+    int code = zk->getChildren(getWorkerPath(), true, &children);
     NOTOK_RETURN(code);
 
     //find deleted worker

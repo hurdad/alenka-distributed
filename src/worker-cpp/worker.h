@@ -4,6 +4,7 @@
 #include "watcher.h"
 #include "zookeeper.h"
 #include "common.h"
+#include "config.h"
 #include <map>
 
 #include "alenka.h"
@@ -12,14 +13,8 @@ using namespace std;
 
 class Worker : public Watcher{
 public:
-    Worker(ZooKeeper *zk) : Watcher(zk) {
-    	alenka::init(NULL);
-    }
-
-    ~Worker(){
-    	alenka::close();
-    }
-
+    Worker(ZooKeeper *zk);
+    ~Worker();
     bool createWorkspace();
     bool createWorker();
     bool getTasks();

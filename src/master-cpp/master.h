@@ -4,6 +4,7 @@
 #include "watcher.h"
 #include "zookeeper.h"
 #include "common.h"
+#include "config.h"
 #include <map>
 
 using namespace std;

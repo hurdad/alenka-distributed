@@ -1,9 +1,17 @@
 #include "worker.h"
 #include <boost/lexical_cast.hpp>
 
+Worker::  Worker(ZooKeeper *zk) : Watcher(zk) {
+	alenka::init(NULL);
+}
+
+Worker:: ~Worker(){
+	alenka::close();
+}
+
 bool Worker::createWorkspace() {
     string fullpath;
-    int code = zk->create(ASSIGNPATH + "/work-", "", ZOO_OPEN_ACL_UNSAFE,
+    int code = zk->create(getAssignPath() + "/work-", "", ZOO_OPEN_ACL_UNSAFE,
             ZOO_SEQUENCE, &fullpath, true);
 
     LOG_INFO("worker node:%s", fullpath.c_str());
@@ -18,7 +26,7 @@ bool Worker::createWorkspace() {
 }
 
 bool Worker::createWorker() {
-    int code = zk->create(WORKERPATH+"/"+m_worker_node, "", ZOO_OPEN_ACL_UNSAFE,
+    int code = zk->create(getWorkerPath()+"/"+m_worker_node, "", ZOO_OPEN_ACL_UNSAFE,
             ZOO_EPHEMERAL, NULL, true);
 
     return code == ZOK;
@@ -28,7 +36,7 @@ bool Worker::getTasks() {
     vector<string> children;
     int code = zk->getChildren(m_assign_dir, true, &children);
 
-    //LOG_INFO("got children:%d task num:%d", children.size(), m_tasks.size());
+    LOG_INFO("got children:%d task num:%d", children.size(), m_tasks.size());
 
     if (code != ZOK) return false;
 

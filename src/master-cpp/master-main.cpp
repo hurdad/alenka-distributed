@@ -1,17 +1,44 @@
 #include <string>
+#include <boost/program_options.hpp>
 #include "master.h"
+#include "config.h"
 
 using namespace std;
+using namespace boost::program_options;
 
 int main(int argc, char **argv) {
-    if (process(argc, argv)) {
-        return 1;
-    }
 
-    log_init(CLOG_LEVEL_INFO, "log-master");
+	string config;
+	options_description desc("Options");
+	desc.add_options()("help", "Options related to the program.")("config,c",
+			value<string>(&config)->default_value("config/sample.cfg"), "Configuration File");
 
-    string host = "192.168.85.132:2181,192.168.85.132:2182,192.168.85.132:2183";
-    ZooKeeper zk(host, 10000);
+	variables_map vm;
+	try {
+		store(parse_command_line(argc, argv, desc), vm);
+		notify(vm);
+	} catch (exception &e) {
+		cout << e.what() << endl;
+		return EXIT_FAILURE;
+	}
+
+	//print help
+	if (vm.count("help")) {
+		cout << desc << endl;
+		return EXIT_SUCCESS;
+	}
+
+	//init config
+	initZookeeperConfig();
+	initDataDictConfig();
+	initFileSystemConfig();
+
+	//parse config
+	parseMasterConfig(config.c_str());
+
+    log_init((CLogLevel)log_level, "master.log");
+
+    ZooKeeper zk(_zk.hosts, _zk.timeout);
 
     Master m(&zk);
     m.startWatchThread();

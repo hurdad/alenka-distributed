@@ -30,28 +30,20 @@ struct file_system {
 extern file_system _fs;
 
 extern int log_level;
-
+extern string log_path;
 static const std::string MASTERPATH = "/masters";
 static const std::string WORKERPATH = "/workers";
 static const std::string ASSIGNPATH = "/assign";
 static const std::string TASKPATH = "/tasks";
 
 extern const string getMasterPath();
-
 extern const string getWorkerPath();
-
 const string getAssignPath();
-
 const string getTaskPath();
-
 void initZookeeperConfig();
-
 void initDataDictConfig();
-
 void initFileSystemConfig();
-
 void parseMasterConfig(const char * configFile);
-
 void parseWorkerConfig(const char * configFile);
 
 #endif /* CONFIG_H_ */

@@ -5,6 +5,7 @@ zookeeper_config _zk;
 data_dictionary _dd;
 file_system _fs;
 int log_level = 4;
+string log_path = "logs/";
 
 const string getMasterPath(){
 	return _zk.base_path + MASTERPATH;
@@ -24,7 +25,7 @@ const string getTaskPath(){
 
 void initZookeeperConfig(){
 	_zk.hosts = "localhost:2181";
-	//_zk.timeout = 10000;
+	_zk.timeout = 10000;
 	_zk.base_path = "/alenka";
 }
 
@@ -104,5 +105,6 @@ void parseWorkerConfig(const char * configFile) {
 	_fs.hdfs_port = hdfs_port;
 	cfg.lookupValue("file_system.hdfs_base_path", _fs.hdfs_base_path);
 
-	cfg.lookupValue("log_level", log_level);
+	cfg.lookupValue("log.level", log_level);
+	cfg.lookupValue("log.path", log_path);
 }

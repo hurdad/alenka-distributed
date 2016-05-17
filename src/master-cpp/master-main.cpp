@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 	//parse config
 	parseMasterConfig(config.c_str());
 
-    log_init((CLogLevel)log_level, "master.log");
+    log_init((CLogLevel)log_level, (log_path + string("master.log")).c_str());
 
     ZooKeeper zk(_zk.hosts, _zk.timeout);
 

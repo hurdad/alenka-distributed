@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 	alenka::file_system_hdfs_port = _fs.hdfs_port;
 	alenka::file_system_hdfs_base_path = _fs.hdfs_base_path.c_str();
 
-	log_init((CLogLevel)log_level, "worker.log");
+	log_init((CLogLevel)log_level, (log_path + string("worker.log")).c_str());
 
     ZooKeeper zk(_zk.hosts, _zk.timeout);
 

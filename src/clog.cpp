@@ -93,7 +93,8 @@ void log_message(CLogLevel curLevel,int line,const char* funcName,
 
     static pid_t pid=0;
     if(pid==0)pid=getpid();
-
+    printf("%s [%d][%s][%s:%d] %s\n", time_now(get_time_buffer()),pid,
+            dbgLevelStr[curLevel],funcName,line,message);
 #ifndef THREADED
     fprintf(LOGSTREAM, "%s [%d][%s][%s:%d] %s\n", time_now(get_time_buffer()),pid,
             dbgLevelStr[curLevel],funcName,line,message);

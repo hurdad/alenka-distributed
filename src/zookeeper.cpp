@@ -12,7 +12,6 @@
 #include <boost/bind.hpp>
 #include <boost/tuple/tuple.hpp>
 #include "clog.h"
-//#include "path.h"
 
 using namespace boost;
 using namespace std;

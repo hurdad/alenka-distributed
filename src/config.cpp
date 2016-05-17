@@ -25,7 +25,7 @@ const string getTaskPath(){
 
 void initZookeeperConfig(){
 	_zk.hosts = "localhost:2181";
-	_zk.timeout = 10000;
+	_zk.timeout = 1000;
 	_zk.base_path = "/alenka";
 }
 

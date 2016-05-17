@@ -30,7 +30,7 @@ AC_CHECK_LIB([zookeeper_mt], [main], [],[
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE()
 
-AC_PROG_CXX([nvcc])
+AC_PROG_CXX()
 
 AC_CONFIG_FILES(Makefile src/Makefile)
 AC_OUTPUT

@@ -1,0 +1,4 @@
+[submodule "deps/Alenka"]
+	path = deps/Alenka
+	url = https://github.com/antonmks/Alenka.git
+	branch = development

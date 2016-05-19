@@ -9,8 +9,6 @@ Framework for running concurrent alenka queries, distributed across servers.
 * Redis - metadata [data dictionary]
 * Python shell [bin/alenka-shell.py]
 
-Gettting Started
-========
 ### Requirements:
 * Zookeeper Cluster
 * Hadoop HDFS Cluster

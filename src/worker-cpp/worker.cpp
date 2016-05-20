@@ -90,7 +90,8 @@ bool Worker::setLoad(int load) {
 
 void Worker::RunTask(const string &taskNode) {
     LOG_INFO("run task:%s, task info:%s", taskNode.c_str(), m_tasks[taskNode]->info);
-    alenka::execute(m_tasks[taskNode]->info);
+    alenka::res result = alenka::execute(m_tasks[taskNode]->info);
+
 }
 
 void Worker::childChange(const string &path) {

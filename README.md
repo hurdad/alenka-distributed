@@ -1,3 +1,5 @@
+UNDER HEAVY DEVELOPMENT [Does not work yet]
+
 # alenka-distributed
 distributed implementation of alenka gpu database engine
 
